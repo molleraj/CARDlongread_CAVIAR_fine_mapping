@@ -12,8 +12,19 @@ warnings.filterwarnings('ignore')
 import rpy2.robjects as ro
 from rpy2.robjects.packages import importr
 
+# subroutine to parse command line arguments
 def parse_args():
+    parser = argparse.ArgumentParser(description="Prepare variant lists and z-score tables for fine mapping 100 most significantly associated variants per phenotype for significantly associated phenotype-variant pairs.")
+    # argument for cis QTL tensorQTL map file
+    parser.add_argument("--cis_map_file", required=True, help="Path to tensorQTL cis-QTL phenotype/variant association map file.")
+    # argument for parquet files
+    parser.add_argument("--cis_parquet_files", required=True, help="Path to parquet files containing association information for all cis-QTL phenotype/variant pairs.")
+    # argument for CAVIAR analysis directory
+    parser.add_argument("--caviar_dir", required=True, help="Path to CAVIAR fine mapping analysis directory.")
+    # return parsed arguments
+    return parser.parse_args()
 
+# main script subroutine
 def main():
     # load cis-QTL map
     cis_df = pd.read_csv(cis_map_file,index_col=0)
