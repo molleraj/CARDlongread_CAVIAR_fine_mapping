@@ -14,6 +14,8 @@ from rpy2.robjects.packages import importr
 
 # subroutine to parse command line arguments
 def parse_args():
+    parser = argparse.ArgumentParser(description="Find most likely causal variant in CAVIAR outputs and append variant ID plus causal post probability to filtered tensorQTL cis-QTL map file.")
+    
     
 # main script subroutine
 def main():

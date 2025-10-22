@@ -1,0 +1,2 @@
+# run CAVIAR on z score tables and LD matrices
+CAVIAR -l ${CAVIAR_OUTPUT}/${set_name}/${pheno}_LD.ld -z ${CAVIAR_OUTPUT}/${set_name}/${pheno}_zscore.txt -o ${CAVIAR_OUTPUT}/${set_name}/RESULTS/${pheno}_caviar -c 1
