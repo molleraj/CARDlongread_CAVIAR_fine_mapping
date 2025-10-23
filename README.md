@@ -6,3 +6,7 @@ The pipeline is run in four steps:
 2. Calculating linkage disequilibrium (LD) matrices for each variant set selected above.
 3. Running CAVIAR on each variant set per phenotype.
 4. Appending CAVIAR causal post probabilities to initial significant phenotype/variant pair table.
+
+## Usage
+
+## Example output
