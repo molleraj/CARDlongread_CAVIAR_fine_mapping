@@ -40,7 +40,7 @@ def main():
         pheno = index
         CHR = row['chr']
         try:
-            temp = pd.read_csv(f'{CAVIAR_OUTPUT}/{set_name}/RESULTS/{pheno}_caviar_post', sep='\t')
+            temp = pd.read_csv(f'{args.caviar_dir}/{args.output_prefix}/RESULTS/{pheno}_caviar_post', sep='\t')
         
             # Sort by 'Causal_Post._Prob.' in descending order
             temp = temp.sort_values('Causal_Post._Prob.', ascending=False)
@@ -66,7 +66,6 @@ def main():
         except Exception as e:
             print(f"Error processing {pheno} for {CHR}: {e}")
             
-    import pandas as pd
 
     # Initialize an empty DataFrame to store results
     results = pd.DataFrame(columns=['Phenotype', 'Chromosome', 'CAVIAR Fine Mapping Top SV', 'CAVIAR Fine Mapping Top SV Causal Post Probability', 
@@ -78,7 +77,7 @@ def main():
         pheno = index
         CHR = row['chr']
         try:
-            temp = pd.read_csv(f'{CAVIAR_OUTPUT}/{set_name}/RESULTS/{pheno}_caviar_post', sep='\t')
+            temp = pd.read_csv(f'{args.caviar_dir}/{args.output_prefix}/RESULTS/{pheno}_caviar_post', sep='\t')
         
             # Sort by 'Causal_Post._Prob.' in descending order
             temp = temp.sort_values('Causal_Post._Prob.', ascending=False)
@@ -111,9 +110,11 @@ def main():
 
         except Exception as e:
             print(f"Error processing {pheno} for {CHR}: {e}")
+            
     # join CAVIAR and tensorQTL cis-QTL results
     # get most significant variant type from cis map
-    # get most significant variant type from 
+    # get most significant variant type from CAVIAR fine mapping
+    # determine whether the same variant type is most significant in both
     # Display or save results as needed
         
     
