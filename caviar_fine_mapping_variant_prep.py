@@ -15,10 +15,12 @@ from rpy2.robjects.packages import importr
 # subroutine to parse command line arguments
 def parse_args():
     parser = argparse.ArgumentParser(description="Prepare variant lists and z-score tables for fine mapping 100 most significantly associated variants per phenotype for significantly associated phenotype-variant pairs.")
+    # specify output prefix
+    parser.add_argument("--output_prefix", required=True, help="Name prefix for output files (e.g., nabec_July_2024_rna_TPM_SV_harmonized_prun).")
     # argument for cis QTL tensorQTL map file
-    parser.add_argument("--cis_map_file", required=True, help="Path to tensorQTL cis-QTL phenotype/variant association map file.")
+    parser.add_argument("--cis_map_file", required=True, help="Path to input tensorQTL cis-QTL phenotype/variant association map file.")
     # argument for parquet files
-    parser.add_argument("--cis_parquet_files", required=True, help="Path to parquet files containing association information for all cis-QTL phenotype/variant pairs.")
+    parser.add_argument("--cis_parquet_dir", required=True, help="Path to parquet files containing association information for all cis-QTL phenotype/variant pairs.")
     # argument for CAVIAR analysis directory
     parser.add_argument("--caviar_dir", required=True, help="Path to CAVIAR fine mapping analysis directory.")
     # return parsed arguments
@@ -26,16 +28,23 @@ def parse_args():
 
 # main script subroutine
 def main():
+    # load arguments
+    args=parse_args()
     # load cis-QTL map
-    cis_df = pd.read_csv(cis_map_file,index_col=0)
+    cis_df = pd.read_csv(args.cis_map_file,index_col=0)
     # filter for significant variants based on FDR adjusted q-value (>0.05)
     cis_df = cis_df[cis_df['qval'] < 0.05]
     # calculate z score based on slope and slope se
     cis_df['z_score'] = cis_df['slope']/cis_df['slope_se']
     # remove napu prefix from variant ids where necessary
     cis_df['variant_id'] = cis_df['variant_id'].str.replace('napu_','')
+    # output file for making CAVIAR input LD matrices
+    cis_df[['chr']].to_csv(f'{args.caviar_dir}/{args.output_prefix}/CAVIAR_LD_{args.output_prefix}_calc.csv')
+    # output filtered, renamed variant cis-map
+    cis_df.to_csv(f'{args.caviar_dir}/{args.output_prefix}/{args.output_prefix}.qval_filtered.cis.map.csv')
 
-    temp = cis_df
+    # make copy of cis-QTL map file
+    temp = cis_df.copy()
 
     temp = temp.sort_values('chr')
 
@@ -43,7 +52,7 @@ def main():
     chromosome_data = {}
 
     for chr_num in temp['chr'].unique():
-        chromosome_data[chr_num] = pd.read_parquet(f'{tensorqtl_dir}/{set_name}.cis_qtl_pairs.{chr_num}.parquet')
+        chromosome_data[chr_num] = pd.read_parquet(f'{args.cis_parquet_dir}/{args.output_prefix}.cis_qtl_pairs.{chr_num}.parquet')
     
     # iterate through filtered cis map to get top 100 variants for each phenotype
     for index, row in temp.iterrows():
@@ -83,8 +92,8 @@ def main():
         # Output the top 100 variants
         #top_100_variants
 
-        top_100_variants[['variant_id','zscore']].to_csv(f'{CAVIAR_OUTPUT}/{set_name}/{pheno}_zscore.txt',index=False,header=None,sep='\t')
-        top_100_variants['variant_id'].to_csv(f'{CAVIAR_OUTPUT}/{set_name}/{pheno}_variant_id.txt',header=None,index=False)
+        top_100_variants[['variant_id','zscore']].to_csv(f'{args.caviar_dir}/{args.output_prefix}/{pheno}_zscore.txt',index=False,header=None,sep='\t')
+        top_100_variants['variant_id'].to_csv(f'{args.caviar_dir}/{args.output_prefix}/{pheno}_variant_id.txt',header=None,index=False)
         
 # run main subroutine
 if __name__ == "__main__":
