@@ -61,12 +61,12 @@ def main():
                     TOPSV_SNP_ID = TOPSV['SNP_ID']
                     TOPSV_Causal_Post_Prob = TOPSV['Causal_Post._Prob.']
                 # Append the results in one row to the DataFrame
-                results = results.append({
+                results = pd.concat([results,pd.DataFrame({
                     'Phenotype': pheno,
                     'Chromosome': CHR,
                     'CAVIAR Fine Mapping Top SV': TOPSV_SNP_ID,
                     'CAVIAR Fine Mapping Top SV Causal Post Probability': TOPSV_Causal_Post_Prob
-                }, ignore_index=True)
+                }, index=[0])], ignore_index=True)
 
             except Exception as e:
                 print(f"Error processing {pheno} for {CHR}: {e}")
@@ -105,20 +105,20 @@ def main():
                     TOPSNV = temp[~temp['SNP_ID'].str.contains('napu')].iloc[0, :]
 
                 # Append the results in one row to the DataFrame
-                results = results.append({
+                results = pd.concat([results,pd.DataFrame({
                     'Phenotype': pheno,
                     'Chromosome': CHR,
                     'CAVIAR Fine Mapping Top SV': TOPSV_SNP_ID,
                     'CAVIAR Fine Mapping Top SV Causal Post Probability': TOPSV_Causal_Post_Prob,
                     'CAVIAR Fine Mapping Top SNV': TOPSNV['SNP_ID'],
                     'CAVIAR Fine Mapping Top SNV Causal Post Probability': TOPSNV['Causal_Post._Prob.']
-                }, ignore_index=True)
+                }, index=[0])], ignore_index=True)
 
             except Exception as e:
                 print(f"Error processing {pheno} for {CHR}: {e}")
     
     # export initial CAVIAR results for each phenotype
-    results.to_csv(f'{args.caviar_dir}/{args.output_prefix}/RESULTS/{args.output_prefix}_caviar_causal_post_probs_table.csv',ignore_index=True)        
+    results.to_csv(f'{args.caviar_dir}/{args.output_prefix}/RESULTS/{args.output_prefix}_caviar_causal_post_probs_table.csv',index=False)        
             
     # join CAVIAR and tensorQTL cis-QTL results
     # rename results table columns
@@ -129,18 +129,20 @@ def main():
     cis_df = cis_df.loc[:,['phenotype_id','variant_id','af','pval_nominal','slope','slope_se','pval_perm','bh_fdr','qval']]
     # join tables on phenotype id
     cis_caviar_join_df = cis_df.merge(results,on='phenotype_id',how='left')
-    # add additional columns to dataframe
-    cis_caviar_join_df['cis-QTL Top Variant Type']=None
-    cis_caviar_join_df['CAVIAR Top Variant Type']=None
-    cis_caviar_join_df['cis-QTL/CAVIAR Top Variant Type Concordance']=None
-    # get most significant variant type from cis map
-    cis_caviar_join_df['cis-QTL Top Variant Type']=cis_caviar_join_df['variant_id'].str.contains('_').replace({True: 'SV', False: 'SNV'})
-    # get most significant variant type from CAVIAR fine mapping
-    cis_caviar_join_df['CAVIAR Top Variant Type']=(test_caviar_table['CAVIAR Fine Mapping Top SV Causal Post Probability']>test_caviar_table['CAVIAR Fine Mapping Top SNV Causal Post Probability']).replace({True: 'SV', False: 'SNV'})
-    # determine whether the same variant type is most significant in both
-    cis_caviar_join_df['cis-QTL/CAVIAR Top Variant Type Concordance']=(cis_caviar_join_df['CAVIAR Top Variant Type']==cis_caviar_join_df['cis-QTL Top Variant Type'])
+    # below only if SV AND SNV QTL:
+    if (args.variant_type == "SV+SNV"):
+        # add additional columns to dataframe
+        cis_caviar_join_df['cis-QTL Top Variant Type']=None
+        cis_caviar_join_df['CAVIAR Top Variant Type']=None
+        cis_caviar_join_df['cis-QTL/CAVIAR Top Variant Type Concordance']=None
+        # get most significant variant type from cis map
+        cis_caviar_join_df['cis-QTL Top Variant Type']=cis_caviar_join_df['variant_id'].str.contains('_').replace({True: 'SV', False: 'SNV'})
+        # get most significant variant type from CAVIAR fine mapping
+        cis_caviar_join_df['CAVIAR Top Variant Type']=(cis_caviar_join_df['CAVIAR Fine Mapping Top SV Causal Post Probability']>cis_caviar_join_df['CAVIAR Fine Mapping Top SNV Causal Post Probability']).replace({True: 'SV', False: 'SNV'})
+        # determine whether the same variant type is most significant in both
+        cis_caviar_join_df['cis-QTL/CAVIAR Top Variant Type Concordance']=(cis_caviar_join_df['CAVIAR Top Variant Type']==cis_caviar_join_df['cis-QTL Top Variant Type'])
     # Display or save results as needed
-    cis_caviar_join_df.to_csv(f'{args.caviar_dir}/{args.output_prefix}/RESULTS/{args.output_prefix}_cisqtl_caviar_join_table.csv',ignore_index=True)
+    cis_caviar_join_df.to_csv(f'{args.caviar_dir}/{args.output_prefix}/RESULTS/{args.output_prefix}_cisqtl_caviar_join_table.csv',index=False)
     
 # run main subroutine
 if __name__ == "__main__":

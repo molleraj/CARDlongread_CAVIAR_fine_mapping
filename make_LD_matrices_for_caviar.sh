@@ -9,5 +9,5 @@ while IFS=',' read -r pheno chr
 do
 	plink --bfile ${BFILE_PREFIX_PATH} --extract ${CAVIAR_OUTPUT_DIR}/${CAVIAR_OUTPUT_PREFIX}/${pheno}_variant_id.txt \
       --r2 square yes-really \
-      --out ${CAVIAR_OUTPUT_DIR}/${CAVIAR_OUTPUT_PREFIX}}/${pheno}_LD
+      --out ${CAVIAR_OUTPUT_DIR}/${CAVIAR_OUTPUT_PREFIX}/${pheno}_LD
 done < <(tail -n +2 ${CAVIAR_OUTPUT_DIR}/${CAVIAR_OUTPUT_PREFIX}/CAVIAR_LD_${CAVIAR_OUTPUT_PREFIX}_calc.csv)

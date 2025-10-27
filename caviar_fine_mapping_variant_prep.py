@@ -93,7 +93,8 @@ def main():
             if not napu_lowest_variant.empty:
                 # Replace the 100th variant with the 'napu_' variant
                 top_100_variants = top_100_variants[:-1]  # Remove the last variant (100th)
-                top_100_variants = top_100_variants.append(napu_lowest_variant)  # Append the napu_ variant
+                # top_100_variants = top_100_variants.concat(napu_lowest_variant)  # Append the napu_ variant
+                top_100_variants = pd.concat([top_100_variants, napu_lowest_variant],ignore_index=True)
 
         # Output the top 100 variants
         #top_100_variants
