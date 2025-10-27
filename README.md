@@ -9,7 +9,8 @@ The pipeline is run in four steps:
 
 ## Usage
 
-```usage: caviar_fine_mapping_variant_prep.py [-h] --output_prefix OUTPUT_PREFIX --cis_map_file CIS_MAP_FILE --cis_parquet_dir CIS_PARQUET_DIR --caviar_dir CAVIAR_DIR
+```
+usage: caviar_fine_mapping_variant_prep.py [-h] --output_prefix OUTPUT_PREFIX --cis_map_file CIS_MAP_FILE --cis_parquet_dir CIS_PARQUET_DIR --caviar_dir CAVIAR_DIR
 
 Prepare variant lists and z-score tables for fine mapping 100 most significantly associated variants per phenotype for significantly associated phenotype-variant pairs.
 
@@ -22,8 +23,10 @@ optional arguments:
   --cis_parquet_dir CIS_PARQUET_DIR
                         Path to parquet files containing association information for all cis-QTL phenotype/variant pairs.
   --caviar_dir CAVIAR_DIR
-                        Path to CAVIAR fine mapping analysis directory.```
-```usage: caviar_fine_mapping_causal_post_merge.py [-h] --cis_map_file CIS_MAP_FILE --caviar_dir CAVIAR_DIR --output_prefix OUTPUT_PREFIX --variant_type {SV,SV+SNV}
+                        Path to CAVIAR fine mapping analysis directory.
+```
+```
+usage: caviar_fine_mapping_causal_post_merge.py [-h] --cis_map_file CIS_MAP_FILE --caviar_dir CAVIAR_DIR --output_prefix OUTPUT_PREFIX --variant_type {SV,SV+SNV}
 
 Find most likely causal variant in CAVIAR outputs and append variant ID plus causal post probability to filtered tensorQTL cis-QTL map file.
 
@@ -36,6 +39,7 @@ optional arguments:
   --output_prefix OUTPUT_PREFIX
                         Name prefix for output files (e.g., nabec_July_2024_rna_TPM_SV_harmonized_prun).
   --variant_type {SV,SV+SNV}
-                        tensorQTL run type (SV or SV+SNV).```
+                        tensorQTL run type (SV or SV+SNV).
+```
 
 ## Example output
