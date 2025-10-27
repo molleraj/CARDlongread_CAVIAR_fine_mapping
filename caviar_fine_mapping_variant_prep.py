@@ -39,6 +39,11 @@ def main():
     cis_df['z_score'] = cis_df['slope']/cis_df['slope_se']
     # remove napu prefix from variant ids where necessary
     cis_df['variant_id'] = cis_df['variant_id'].str.replace('napu_','')
+    # additional steps to get chromosome
+    LOC = cis_df['variant_id'].str.split(':|_', expand=True)
+    LOC = LOC.iloc[:,0:2]
+    LOC.columns = ['chr','start']
+    cis_df = pd.concat([cis_df,LOC],axis=1)
     # output file for making CAVIAR input LD matrices
     cis_df[['chr']].to_csv(f'{args.caviar_dir}/{args.output_prefix}/CAVIAR_LD_{args.output_prefix}_calc.csv')
     # output filtered, renamed variant cis-map

@@ -34,7 +34,7 @@ def main():
     # load cis_df
     cis_df = pd.read_csv(args.cis_map_file,index_col=0)
     
-    if (args.qtl_type == "SV"):
+    if (args.variant_type == "SV"):
         # For SV only QTL
         # Initialize an empty DataFrame to store results
         results = pd.DataFrame(columns=['Phenotype', 'Chromosome', 'CAVIAR Fine Mapping Top SV', 'CAVIAR Fine Mapping Top SV Causal Post Probability'])
@@ -71,7 +71,7 @@ def main():
             except Exception as e:
                 print(f"Error processing {pheno} for {CHR}: {e}")
             
-    if (args.qtl_type == "SV+SNV"):
+    if (args.variant_type == "SV+SNV"):
         # Initialize an empty DataFrame to store results
         results = pd.DataFrame(columns=['Phenotype', 'Chromosome', 'CAVIAR Fine Mapping Top SV', 'CAVIAR Fine Mapping Top SV Causal Post Probability', 
                                     'CAVIAR Fine Mapping Top SNV', 'CAVIAR Fine Mapping Top SNV Causal Post Probability'])
