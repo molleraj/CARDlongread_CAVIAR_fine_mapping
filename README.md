@@ -26,6 +26,12 @@ optional arguments:
                         Path to CAVIAR fine mapping analysis directory.
 ```
 ```
+make_LD_matrices_for_caviar.sh CAVIAR_OUTPUT_DIR CAVIAR_OUTPUT_PREFIX BFILE_PREFIX_PATH
+```
+```
+run_CAVIAR.sh CAVIAR_OUTPUT_DIR CAVIAR_OUTPUT_PREFIX
+```
+```
 usage: caviar_fine_mapping_causal_post_merge.py [-h] --cis_map_file CIS_MAP_FILE --caviar_dir CAVIAR_DIR --output_prefix OUTPUT_PREFIX --variant_type {SV,SV+SNV}
 
 Find most likely causal variant in CAVIAR outputs and append variant ID plus causal post probability to filtered tensorQTL cis-QTL map file.
