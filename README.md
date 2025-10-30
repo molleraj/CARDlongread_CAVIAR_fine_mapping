@@ -1,5 +1,5 @@
 # NIA CARD ANG CAVIAR QTL Fine Mapping Pipeline
-This repository includes a pipeline for streamlined fine mapping of potentially causal QTL variants using [CAVIAR](http://genetics.cs.ucla.edu/caviar/index.html).
+This repository includes a pipeline for streamlined fine mapping of potentially causal QTL variants using [CAVIAR](http://genetics.cs.ucla.edu/caviar/index.html). The pipeline is currently designed to run on tensorQTL outputs from runs conducted with Napu SVs and harmonized DeepVariant SNVs.
 
 The pipeline is run in four steps:
 1. Preparation of up to 100 most significantly associated variants per phenotype, making sure to include at least one structural variant when necessary, for table of phenotype/variant pairs passing FDR-corrected p-value (q-value) filter (typically 0.05).
