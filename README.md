@@ -49,3 +49,5 @@ optional arguments:
 ```
 
 ## Example output
+
+An example q-value filtered tensorQTL cis-QTL map file is included as ```example.qval_filtered.cis.map.csv```, an example CAVIAR causal post probabilities table is included as ```example_caviar_causal_post_probs_table.csv```, and an example cis-QTL/CAVIAR fine mapping joined table is included as ```example_cisqtl_caviar_join_table.csv```.
