@@ -133,14 +133,19 @@ def main():
     if (args.variant_type == "SV+SNV"):
         # add additional columns to dataframe
         cis_caviar_join_df['cis-QTL Top Variant Type']=None
-        cis_caviar_join_df['CAVIAR Top Variant Type']=None
-        cis_caviar_join_df['cis-QTL/CAVIAR Top Variant Type Concordance']=None
+        cis_caviar_join_df['CAVIAR Top Variant Type (SV>SNV probability)']=None
+        cis_caviar_join_df['CAVIAR Top Variant Type (SV>=SNV probability)']=None
+        cis_caviar_join_df['cis-QTL/CAVIAR Top Variant Type Concordance (SV>SNV CAVIAR probability)']=None
+        cis_caviar_join_df['cis-QTL/CAVIAR Top Variant Type Concordance (SV>=SNV CAVIAR probability)']=None
         # get most significant variant type from cis map
         cis_caviar_join_df['cis-QTL Top Variant Type']=cis_caviar_join_df['variant_id'].str.contains('_').replace({True: 'SV', False: 'SNV'})
         # get most significant variant type from CAVIAR fine mapping
-        cis_caviar_join_df['CAVIAR Top Variant Type']=(cis_caviar_join_df['CAVIAR Fine Mapping Top SV Causal Post Probability']>cis_caviar_join_df['CAVIAR Fine Mapping Top SNV Causal Post Probability']).replace({True: 'SV', False: 'SNV'})
+        # compare both SV probability greater than SNV and greater than or equal to
+        cis_caviar_join_df['CAVIAR Top Variant Type (SV>SNV probability)']=(cis_caviar_join_df['CAVIAR Fine Mapping Top SV Causal Post Probability']>cis_caviar_join_df['CAVIAR Fine Mapping Top SNV Causal Post Probability']).replace({True: 'SV', False: 'SNV'})
+        cis_caviar_join_df['CAVIAR Top Variant Type (SV>=SNV probability)']=(cis_caviar_join_df['CAVIAR Fine Mapping Top SV Causal Post Probability']>=cis_caviar_join_df['CAVIAR Fine Mapping Top SNV Causal Post Probability']).replace({True: 'SV', False: 'SNV'})
         # determine whether the same variant type is most significant in both
-        cis_caviar_join_df['cis-QTL/CAVIAR Top Variant Type Concordance']=(cis_caviar_join_df['CAVIAR Top Variant Type']==cis_caviar_join_df['cis-QTL Top Variant Type'])
+        cis_caviar_join_df['cis-QTL/CAVIAR Top Variant Type Concordance (SV>SNV CAVIAR probability)']=(cis_caviar_join_df['CAVIAR Top Variant Type (SV>SNV probability)']==cis_caviar_join_df['cis-QTL Top Variant Type'])
+        cis_caviar_join_df['cis-QTL/CAVIAR Top Variant Type Concordance (SV>=SNV CAVIAR probability)']=(cis_caviar_join_df['CAVIAR Top Variant Type (SV>=SNV probability)']==cis_caviar_join_df['cis-QTL Top Variant Type'])
     # Display or save results as needed
     cis_caviar_join_df.to_csv(f'{args.caviar_dir}/{args.output_prefix}/RESULTS/{args.output_prefix}_cisqtl_caviar_join_table.csv',index=False)
     
