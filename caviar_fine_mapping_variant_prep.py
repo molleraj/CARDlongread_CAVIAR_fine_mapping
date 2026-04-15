@@ -24,6 +24,8 @@ def parse_args():
     parser.add_argument("--cis_parquet_dir", required=True, help="Path to parquet files containing association information for all cis-QTL phenotype/variant pairs.")
     # argument for CAVIAR analysis directory
     parser.add_argument("--caviar_dir", required=True, help="Path to CAVIAR fine mapping analysis directory.")
+    # add argument for SV prefix
+    parser.add_argument("--sv_prefix",required=False,default="napu",help="Prefix indicating SV to include (at least one included per 100 variants; default 'napu').")
     # return parsed arguments
     return parser.parse_args()
 
@@ -83,19 +85,23 @@ def main():
         top_100_variants = NUM_sorted.head(100)
 
         # Check if any variant_id starts with 'napu_'
-        napu_variants = top_100_variants[top_100_variants['variant_id'].str.startswith('napu_')]
-
+        # napu_variants = top_100_variants[top_100_variants['variant_id'].str.startswith('napu_')]
+        structural_variants = top_100_variants[top_100_variants['variant_id'].str.startswith(args.sv_prefix)]
         # If no 'napu_' variant exists in the top 100
-        if napu_variants.empty:
+        # if napu_variants.empty:
+        if structural_variants.empty:
             # Find the variant that starts with 'napu_' and has the lowest pval_nominal (i.e., get at least ONE SV in fine mapping set)
-            napu_lowest_variant = NUM_sorted[NUM_sorted['variant_id'].str.startswith('napu_')].nsmallest(1, 'pval_nominal')
-    
-            if not napu_lowest_variant.empty:
+            # napu_lowest_variant = NUM_sorted[NUM_sorted['variant_id'].str.startswith('napu_')].nsmallest(1, 'pval_nominal')
+            structural_lowest_variant = NUM_sorted[NUM_sorted['variant_id'].str.startswith(args.sv_prefix)].nsmallest(1, 'pval_nominal')
+            
+            # if not napu_lowest_variant.empty:
+            if not structural_lowest_variant.empty:
                 # Replace the 100th variant with the 'napu_' variant
                 top_100_variants = top_100_variants[:-1]  # Remove the last variant (100th)
                 # top_100_variants = top_100_variants.concat(napu_lowest_variant)  # Append the napu_ variant
-                top_100_variants = pd.concat([top_100_variants, napu_lowest_variant],ignore_index=True)
-
+                # top_100_variants = pd.concat([top_100_variants, napu_lowest_variant],ignore_index=True)
+                top_100_variants = pd.concat([top_100_variants, structural_lowest_variant],ignore_index=True)
+                
         # Output the top 100 variants
         #top_100_variants
 

@@ -24,6 +24,8 @@ def parse_args():
     parser.add_argument("--output_prefix", required=True, help="Name prefix for output files (e.g., nabec_July_2024_rna_TPM_SV_harmonized_prun).")
     # set QTL type (SV or SV+SNV)
     parser.add_argument("--variant_type", choices=["SV", "SV+SNV"], required=True, help="tensorQTL run type (SV or SV+SNV).")
+    # add argument for SV prefix
+    parser.add_argument("--sv_prefix",required=False,default="napu",help="Prefix indicating SV to include (at least one included per 100 variants; default 'napu').")
     # return parsed arguments
     return parser.parse_args()
     
@@ -55,7 +57,8 @@ def main():
                 TOPSV_Causal_Post_Prob = None
 
                 # Extract top structural variant (SV) if available
-                top_sv_candidates = temp[temp['SNP_ID'].str.contains('napu')]
+                # top_sv_candidates = temp[temp['SNP_ID'].str.contains('napu')]
+                top_sv_candidates = temp[temp['SNP_ID'].str.contains(args.sv_prefix)]
                 if not top_sv_candidates.empty:
                     TOPSV = top_sv_candidates.iloc[0, :]
                     TOPSV_SNP_ID = TOPSV['SNP_ID']
@@ -92,7 +95,8 @@ def main():
                 TOPSV_Causal_Post_Prob = None
 
                 # Extract top structural variant (SV) if available
-                top_sv_candidates = temp[temp['SNP_ID'].str.contains('napu')]
+                # top_sv_candidates = temp[temp['SNP_ID'].str.contains('napu')]
+                top_sv_candidates = temp[temp['SNP_ID'].str.contains(args.sv_prefix)]
                 if not top_sv_candidates.empty:
                     TOPSV = top_sv_candidates.iloc[0, :]
                     TOPSV_SNP_ID = TOPSV['SNP_ID']
@@ -102,7 +106,8 @@ def main():
                     # Initialize empty TOPSNV dataframe
                     TOPSNV = pd.DataFrame(columns=['SNP_ID','Prob_in_pCausalSet','Causal_Post._Prob.'])
                     # Extract top single nucleotide variant (SNV) (not containing napu in the name)
-                    TOPSNV = temp[~temp['SNP_ID'].str.contains('napu')].iloc[0, :]
+                    # TOPSNV = temp[~temp['SNP_ID'].str.contains('napu')].iloc[0, :]
+                    TOPSNV = temp[~temp['SNP_ID'].str.contains(args.sv_prefix)].iloc[0, :]
 
                 # Append the results in one row to the DataFrame
                 results = pd.concat([results,pd.DataFrame({
