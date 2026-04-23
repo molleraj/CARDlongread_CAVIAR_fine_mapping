@@ -51,6 +51,7 @@ optional arguments:
   --sv_prefix SV_PREFIX
                         Prefix indicating SV to include (at least one included per 100 variants; default 'napu').
 ```
+We have also provided parallelized versions of the ```make_LD_matrices_for_caviar.sh``` and ```run_CAVIAR.sh``` scripts above that use GNU parallel to generate LD matrices and run CAVIAR up to the number set in PARALLEL_JOB_COUNT jobs simultaneously.
 
 ## Example output
 
