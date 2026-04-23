@@ -26,6 +26,8 @@ def parse_args():
     parser.add_argument("--variant_type", choices=["SV", "SV+SNV"], required=True, help="tensorQTL run type (SV or SV+SNV).")
     # add argument for SV prefix
     parser.add_argument("--sv_prefix",required=False,default="napu",help="Prefix indicating SV to include (at least one included per 100 variants; default 'napu').")
+    # add argument for cis map delimiter
+    parser.add_argument("--cis_map_delimiter",required=False,default=",",help="Default cis map file delimiter (default comma).")
     # return parsed arguments
     return parser.parse_args()
     
@@ -34,7 +36,7 @@ def parse_args():
 def main():
     args=parse_args()
     # load cis_df
-    cis_df = pd.read_csv(args.cis_map_file,index_col=0)
+    cis_df = pd.read_csv(args.cis_map_file,sep=args.cis_map_delimiter,index_col=0)
     
     if (args.variant_type == "SV"):
         # For SV only QTL

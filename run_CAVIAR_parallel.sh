@@ -7,11 +7,12 @@ export CAVIAR_OUTPUT_PREFIX=$2
 export PARALLEL_JOB_COUNT=$3
 # run CAVIAR
 # replace while loop with gnu parallel --csv input option
-parallel --header \
+parallel --header : \
+	--env CAVIAR_OUTPUT_DIR,CAVIAR_OUTPUT_PREFIX,PARALLEL_JOB_COUNT \
 	-j ${PARALLEL_JOB_COUNT} \
-	--csv 'CAVIAR -l \${CAVIAR_OUTPUT_DIR}/\${CAVIAR_OUTPUT_PREFIX}/{pheno}_LD.ld \
-		-z \${CAVIAR_OUTPUT_DIR}/\${CAVIAR_OUTPUT_PREFIX}/{pheno}_zscore.txt \
-		-o \${CAVIAR_OUTPUT_DIR}/\${CAVIAR_OUTPUT_PREFIX}/RESULTS/{pheno}_caviar -c 1' \
+	--csv "CAVIAR -l ${CAVIAR_OUTPUT_DIR}/${CAVIAR_OUTPUT_PREFIX}/{phenotype_id}_LD.ld \
+		-z ${CAVIAR_OUTPUT_DIR}/${CAVIAR_OUTPUT_PREFIX}/{phenotype_id}_zscore.txt \
+		-o ${CAVIAR_OUTPUT_DIR}/${CAVIAR_OUTPUT_PREFIX}/RESULTS/{phenotype_id}_caviar -c 1" \
 	:::: ${CAVIAR_OUTPUT_DIR}/${CAVIAR_OUTPUT_PREFIX}/CAVIAR_LD_${CAVIAR_OUTPUT_PREFIX}_calc.csv
 # mkdir -p ${CAVIAR_OUTPUT_DIR}/${CAVIAR_OUTPUT_PREFIX}/RESULTS
 # while IFS=',' read -r pheno chr

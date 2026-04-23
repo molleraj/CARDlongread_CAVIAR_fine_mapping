@@ -10,6 +10,7 @@ import matplotlib.pyplot as plt
 import warnings
 warnings.filterwarnings('ignore')
 import argparse
+import statsmodels.stats.multitest as smm
 # import rpy2.robjects as ro
 # from rpy2.robjects.packages import importr
 
@@ -26,15 +27,24 @@ def parse_args():
     parser.add_argument("--caviar_dir", required=True, help="Path to CAVIAR fine mapping analysis directory.")
     # add argument for SV prefix
     parser.add_argument("--sv_prefix",required=False,default="napu",help="Prefix indicating SV to include (at least one included per 100 variants; default 'napu').")
+    # add argument for cis map delimiter
+    parser.add_argument("--cis_map_delimiter",required=False,default=",",help="Default cis map file delimiter (default comma).")
     # return parsed arguments
     return parser.parse_args()
+
+# compute B&H FDR for given p-values #pvalue multiple test
+def compute_fdr(pvalues):
+    bh_adj = smm.fdrcorrection(pvalues)
+    return bh_adj[1]
 
 # main script subroutine
 def main():
     # load arguments
     args=parse_args()
     # load cis-QTL map
-    cis_df = pd.read_csv(args.cis_map_file,index_col=0)
+    cis_df = pd.read_csv(args.cis_map_file,sep=args.cis_map_delimiter,index_col=0)
+    # add bh_fdr column if necessary before q value filtering
+    cis_df['bh_fdr'] = compute_fdr(cis_df['pval_beta'].fillna(1))
     # filter for significant variants based on FDR adjusted q-value (>0.05)
     cis_df = cis_df[cis_df['qval'] < 0.05]
     # calculate z score based on slope and slope se
