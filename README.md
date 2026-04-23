@@ -51,8 +51,13 @@ optional arguments:
   --sv_prefix SV_PREFIX
                         Prefix indicating SV to include (at least one included per 100 variants; default 'napu').
 ```
-We have also provided parallelized versions of the ```make_LD_matrices_for_caviar.sh``` and ```run_CAVIAR.sh``` scripts above that use GNU parallel to generate LD matrices and run CAVIAR up to the number set in PARALLEL_JOB_COUNT jobs simultaneously.
-
+We have also provided parallelized versions of the ```make_LD_matrices_for_caviar.sh``` and ```run_CAVIAR.sh``` scripts above that use GNU parallel to generate LD matrices and run CAVIAR up to the number set in PARALLEL_JOB_COUNT jobs simultaneously. We have typically set PARALLEL_JOB_COUNT to be the number of CPUs allocated in HPC slurm jobs (e.g., 64 for SLURM_CPUS_PER_TASK=64 for a job).
+```
+make_LD_matrices_for_caviar.sh CAVIAR_OUTPUT_DIR CAVIAR_OUTPUT_PREFIX BFILE_PREFIX_PATH PARALLEL_JOB_COUNT
+```
+```
+run_CAVIAR.sh CAVIAR_OUTPUT_DIR CAVIAR_OUTPUT_PREFIX PARALLEL_JOB_COUNT
+```
 ## Example output
 
 An example q-value filtered tensorQTL cis-QTL map file is included as ```example.qval_filtered.cis.map.csv```, an example CAVIAR causal post probabilities table is included as ```example_caviar_causal_post_probs_table.csv```, and an example cis-QTL/CAVIAR fine mapping joined table is included as ```example_cisqtl_caviar_join_table.csv```.
