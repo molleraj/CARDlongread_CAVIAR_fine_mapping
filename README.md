@@ -51,7 +51,7 @@ optional arguments:
   --sv_prefix SV_PREFIX
                         Prefix indicating SV to include (at least one included per 100 variants; default 'napu').
 ```
-We have also provided parallelized versions of the ```make_LD_matrices_for_caviar.sh``` and ```run_CAVIAR.sh``` scripts above that use GNU parallel to generate LD matrices and run CAVIAR up to the number set in PARALLEL_JOB_COUNT jobs simultaneously. We have typically set PARALLEL_JOB_COUNT to be the number of CPUs allocated in HPC slurm jobs (e.g., 64 for SLURM_CPUS_PER_TASK=64 for a job).
+We have also provided parallelized versions of the ```make_LD_matrices_for_caviar.sh``` and ```run_CAVIAR.sh``` scripts above that use GNU parallel to generate LD matrices and run CAVIAR up to the number set in PARALLEL_JOB_COUNT tasks simultaneously. We have typically set PARALLEL_JOB_COUNT to be the number of CPUs allocated in HPC slurm jobs (e.g., 64 for a job with 64 CPUs allocated and thus SLURM_CPUS_PER_TASK=64). This parameter may require some empirical adjustment for each step depending on memory consumed per task and memory allocated to the parent slurm job. We have noted that plink in the ```make_LD_matrices_for_caviar.sh``` step by default uses all threads available so this step may require a lower parallel job count (e.g., 10) or further adjustment to set the number of threads plink uses in each LD matrix construction task.
 ```
 make_LD_matrices_for_caviar.sh CAVIAR_OUTPUT_DIR CAVIAR_OUTPUT_PREFIX BFILE_PREFIX_PATH PARALLEL_JOB_COUNT
 ```
